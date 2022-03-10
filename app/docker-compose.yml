@@ -1,0 +1,30 @@
+version: '3'
+services:
+  mysql:
+    container_name: db
+    image: mysql:latest
+    environment:
+      - MYSQL_ROOT_PASSWORD=letmein
+      - MYSQL_DATABASE=drupal
+      - MYSQL_USER=drupal
+      - MYSQL_PASSWORD=drupal
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "9906:9906"
+    restart: always
+
+
+  apache:
+    image: apache:latest
+    depends_on:
+      - mysql
+      - php
+    build: .
+    ports:
+      - "8080:80"
+      # - "443:443"
+    volumes:
+      - ./app:/var/www/html/app/
+volumes:
+  db_data:
